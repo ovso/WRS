@@ -34,18 +34,16 @@ public class SetPresenterImpl implements SetPresenter {
                 if(data != null) {
                     if(data.getData() != null) {
                         String environmentDirectory = Environment.getExternalStorageDirectory().toString();
-                        Log.d("getPath=" + data.getData().getPath());
                         String path = data.getData().getPath();
+                        String fullFilePath = null;
+                        Log.d(path);
                         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
                             String fileName = path.split(":")[1];
-                            String fullPath = environmentDirectory + "/" + fileName;
-                            Log.d(fullPath);
-                            File file = new File(fullPath);
-                            Log.d(file.exists()+"");
+                            fullFilePath = environmentDirectory + "/" + fileName;
                         } else {
-                            File file = new File(data.getData().getPath());
-                            Log.d(file.exists()+"kit");
+                            fullFilePath = path;
                         }
+                        mModel.readTextFile(context, fullFilePath);
                     }
 
                 }
