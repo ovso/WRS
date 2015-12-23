@@ -36,13 +36,14 @@ public class SetPresenterImpl implements SetPresenter {
                         String environmentDirectory = Environment.getExternalStorageDirectory().toString();
                         String path = data.getData().getPath();
                         String fullFilePath = null;
-                        Log.d(path);
-                        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+                        Log.d("path="+path);
+                        if(path.indexOf(":") != -1) { // == if(Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH)
                             String fileName = path.split(":")[1];
                             fullFilePath = environmentDirectory + "/" + fileName;
                         } else {
                             fullFilePath = path;
                         }
+
                         mModel.readTextFile(context, fullFilePath);
                     }
 

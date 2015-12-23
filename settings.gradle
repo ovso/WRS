@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':juniversalchardet-1.0.3'

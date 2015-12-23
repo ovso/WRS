@@ -5,6 +5,8 @@ import android.content.Intent;
 
 import net.onepagebook.wrs.common.Log;
 
+import org.mozilla.universalchardet.UniversalDetector;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,13 +35,21 @@ public class SetModel {
             //File file = context.getFileStreamPath(filePath);
             File file = new File(filePath);
             FileInputStream fis = new FileInputStream(file);
-            Reader in = new InputStreamReader(fis);
+            Reader in = new InputStreamReader(fis, "euc-kr");
             int size = fis.available();
             char[] buffer = new char[size];
+            byte[] buf = new byte[size];
             in.read(buffer);
             in.close();
 
             text = new String(buffer);
+            UniversalDetector detector = new UniversalDetector(null);
+            int nread;
+            while ((nread = fis.read(buf))>0 && !detector.isDone()) {
+                detector.handleData(buf, 0, nread);
+            }
+            detector.dataEnd();
+            Log.d("charset = " + detector.getDetectedCharset());
             Log.d("text="+text);
         } catch (IOException e) {
             throw new RuntimeException(e);
