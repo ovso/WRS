@@ -1,16 +1,12 @@
-package net.onpagebook.wrs.main.fragment.setting;
+package net.onepagebook.wrs.main.fragment.setting;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Environment;
-import android.view.View;
 
 import net.onepagebook.wrs.common.Log;
 import net.onpagebook.wrs.R;
-
-import java.io.File;
 
 /**
  * Created by jaeho_oh on 2015-12-22.
@@ -36,7 +32,7 @@ public class SetPresenterImpl implements SetPresenter {
                         String environmentDirectory = Environment.getExternalStorageDirectory().toString();
                         String path = data.getData().getPath();
                         String fullFilePath = null;
-                        Log.d("path="+path);
+                        Log.d("path=" + path);
                         if(path.indexOf(":") != -1) { // == if(Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH)
                             String fileName = path.split(":")[1];
                             fullFilePath = environmentDirectory + "/" + fileName;
@@ -44,7 +40,7 @@ public class SetPresenterImpl implements SetPresenter {
                             fullFilePath = path;
                         }
 
-                        mModel.readTextFile(context, fullFilePath);
+                        mModel.setWRSText(context,mModel.readTextFile(fullFilePath));
                     }
 
                 }

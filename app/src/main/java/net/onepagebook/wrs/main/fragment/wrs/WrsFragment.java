@@ -1,4 +1,4 @@
-package net.onpagebook.wrs.main.fragment.wrs;
+package net.onepagebook.wrs.main.fragment.wrs;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,6 +40,7 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
         mPresenter.onActivityCreate();
 
     }
+
     int i = 0;
     private void show(final String[] content) {
         final Handler handler = new Handler() {
@@ -49,7 +50,6 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
                 TextView tv = (TextView) mContentView.findViewById(R.id.tv_show);
                 tv.setText("");
                 tv.setText(msg.obj.toString());
-                Log.d(tv.getText().toString());
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
@@ -101,16 +101,13 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
             mPresenter.onClickPlay(v);
         }
     }
-
-    private void click() {
-        //String content = getString(R.string.content);
-        String content = "동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려 강산 대한사람 대한으로 길이보전하세. " +
-                "남산 위에 저 소나무 철갑을 두른 듯 바람서리 불변함은 일편단심일세 무궁화 삼천리 화려강산 대한사람 대한으로 길이보전하세.";
+    @Override
+    public void play(String content) {
         int contentLength = content.length();
         Log.d("길이 = " + contentLength);
 
 
-        int sliceLength = 9;
+        int sliceLength = 20;
 
         Log.d("나몫 = " + (contentLength/sliceLength));
         Log.d("나머지 = " + (contentLength%sliceLength));
@@ -125,7 +122,6 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
                 end = start + (contentLength%sliceLength);
             }
             strs[i] = content.subSequence(start, end).toString();
-            Log.d(strs[i].toString());
         }
 
         show(strs);

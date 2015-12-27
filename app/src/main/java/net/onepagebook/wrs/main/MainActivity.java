@@ -1,4 +1,4 @@
-package net.onpagebook.wrs.main;
+package net.onepagebook.wrs.main;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,16 +8,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import net.onepagebook.wrs.common.Log;
 import net.onpagebook.wrs.R;
-import net.onpagebook.wrs.main.fragment.setting.SetFragment;
-import net.onpagebook.wrs.main.fragment.wrs.WrsFragment;
+import net.onepagebook.wrs.main.fragment.setting.SetFragment;
+import net.onepagebook.wrs.main.fragment.wrs.WrsFragment;
 
 public class MainActivity extends AppCompatActivity {
 

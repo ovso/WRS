@@ -1,16 +1,14 @@
-package net.onpagebook.wrs.main.fragment.setting;
+package net.onepagebook.wrs.main.fragment.setting;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.SeekBar;
 
 import net.onepagebook.wrs.common.Log;
@@ -43,8 +41,7 @@ public class SetFragment extends Fragment implements SetPresenter.View, SeekBar.
     @Override
     public void onInit() {
         SeekBar seekBar = (SeekBar) mContentView.findViewById(R.id.seekBar);
-        Button button = (Button) mContentView.findViewById(R.id.button);
-        button.setOnClickListener(this);
+        mContentView.findViewById(R.id.button).setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(this);
     }
 
@@ -62,7 +59,7 @@ public class SetFragment extends Fragment implements SetPresenter.View, SeekBar.
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        Log.d("progress="+progress);
+        //Log.d("progress="+progress);
     }
 
     @Override

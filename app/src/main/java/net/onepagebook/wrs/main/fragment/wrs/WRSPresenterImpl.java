@@ -1,4 +1,4 @@
-package net.onpagebook.wrs.main.fragment.wrs;
+package net.onepagebook.wrs.main.fragment.wrs;
 
 public class WRSPresenterImpl implements WRSPresenter {
     private WRSPresenter.View mView;
@@ -15,6 +15,6 @@ public class WRSPresenterImpl implements WRSPresenter {
 
     @Override
     public void onClickPlay(android.view.View view) {
-        
+        mView.play(mModel.getWRSText(view.getContext()));
     }
 }

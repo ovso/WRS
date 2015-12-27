@@ -1,4 +1,4 @@
-package net.onpagebook.wrs.main.fragment.setting;
+package net.onepagebook.wrs.main.fragment.setting;
 
 import android.content.Context;
 import android.content.Intent;
