@@ -36,16 +36,18 @@
         android:layout_weight="1.5"
         android:orientation="horizontal">
         <Button
-            android:id="@+id/btn_play"
+            android:id="@+id/btn_play_pause"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="재생"/>
+            android:text="play"
+            android:tag="pause"/>
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="정지"/>
+            android:text="stop"
+            android:id="@+id/btn_stop" />
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"

@@ -3,15 +3,18 @@ package net.onepagebook.wrs.main.fragment.wrs;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.onepagebook.wrs.common.Log;
 import net.onpagebook.wrs.R;
 
+import java.security.MessageDigestSpi;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -37,19 +40,17 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
         super.onActivityCreated(savedInstanceState);
 
         mPresenter = new WRSPresenterImpl(this);
-        mPresenter.onActivityCreate();
+        mPresenter.onActivityCreate(getActivity());
 
     }
 
     int i = 0;
     private void show(final String[] content) {
+
         final Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                //super.handleMessage(msg);
-                TextView tv = (TextView) mContentView.findViewById(R.id.tv_show);
-                tv.setText("");
-                tv.setText(msg.obj.toString());
+                showText(msg.obj.toString());
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
@@ -57,13 +58,11 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
                       getActivity().runOnUiThread(new Runnable() {
                           @Override
                           public void run() {
-                              TextView tv = (TextView) mContentView.findViewById(R.id.tv_show);
-                              tv.setText("");
-
+                            clearText();
                           }
                       });
                     }
-                }, 100);
+                }, 200); // 문장 표시 시간
             }
         };
 
@@ -72,34 +71,33 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
             @Override
             public void run() {
                 Message.obtain(handler, 0, content[i]).sendToTarget();
+
                 if(i == content.length -1) {
-                    timer.cancel();
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            TextView tv = (TextView) mContentView.findViewById(R.id.tv_show);
-                            tv.setText("");
+                            clearText();
                             i = 0;
                         }
                     });
+                    timer.cancel();
                 } else {
                     i++;
                 }
             }
-        }, 0, 500);
-
+        }, 0, 1000); // 문장 간격 시간
     }
 
     @Override
     public void onInit() {
-        mContentView.findViewById(R.id.btn_play).setOnClickListener(this);
+        mContentView.findViewById(R.id.btn_play_pause).setOnClickListener(this);
+        mContentView.findViewById(R.id.btn_stop).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.btn_play) {
-            mPresenter.onClickPlay(v);
-        }
+        mPresenter.onClick(v);
     }
     @Override
     public void play(String content) {
@@ -118,12 +116,43 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
 
             int start = i*sliceLength;
             int end = start + sliceLength;
-            if(i == strs.length-1) {
+            int last = strs.length - 1;
+            if(i == last) {
                 end = start + (contentLength%sliceLength);
             }
             strs[i] = content.subSequence(start, end).toString();
         }
-
         show(strs);
+    }
+
+    @Override
+    public void showText(final String text) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((TextView) mContentView.findViewById(R.id.tv_show)).setText(text);
+            }
+        });
+
+    }
+
+    @Override
+    public void clearText() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((TextView) mContentView.findViewById(R.id.tv_show)).setText("");
+            }
+        });
+    }
+
+    @Override
+    public void setBtnText(String text) {
+        ((TextView)mContentView.findViewById(R.id.btn_play_pause)).setText(text);
+    }
+
+    @Override
+    public void showToast(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 }

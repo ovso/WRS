@@ -1,13 +1,10 @@
 package net.onepagebook.wrs.app;
 
 import android.app.Application;
-import android.content.Context;
 
 import net.onepagebook.wrs.common.Log;
+import net.onepagebook.wrs.main.fragment.wrs.WRSScheduleManager;
 
-/**
- * Created by ovso on 2015. 12. 27..
- */
 public class MyApplication extends Application {
     private String mWRSText;
     public void setWRSText(String text) {
@@ -16,5 +13,30 @@ public class MyApplication extends Application {
     }
     public String getWRSText() {
         return mWRSText;
+    }
+    private int mOnceTextLength = 10;
+    public void setOnceTextLength(int length) {
+        mOnceTextLength = length;
+    }
+    public int getOnceTextLength() {
+        return mOnceTextLength;
+    }
+    private String[] mTexts;
+    public void setTextSplit(String[] texts) {
+        mTexts = texts;
+        mScheduleManager.setTextArrayLastPosition(texts.length - 1);
+    }
+    public String[] getTextSplit() {
+        return mTexts;
+    }
+    private WRSScheduleManager mScheduleManager;
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mScheduleManager = new WRSScheduleManager(getApplicationContext());
+    }
+
+    public WRSScheduleManager getScheduleManager() {
+        return mScheduleManager;
     }
 }

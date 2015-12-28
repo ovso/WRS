@@ -41,6 +41,7 @@ public class SetPresenterImpl implements SetPresenter {
                         }
 
                         mModel.setWRSText(context,mModel.readTextFile(fullFilePath));
+                        mModel.doTextSplit(context);
                     }
 
                 }
