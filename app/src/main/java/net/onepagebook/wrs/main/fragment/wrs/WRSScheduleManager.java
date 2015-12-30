@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import net.onepagebook.wrs.app.MyApplication;
+import net.onepagebook.wrs.common.Log;
 
 public class WRSScheduleManager {
     private int textDisplayTime = 100;
@@ -25,20 +26,23 @@ public class WRSScheduleManager {
         this.textArrayLastPosition = textArrayLastPosition;
     }
     public void play() {
+        Log.d("play");
         mWRSState = WRS_STATE.PLAY;
         mTextDisplayTimeHandler.sendEmptyMessage(0);
-        mView.setBtnText("pause");
+        mView.showPauseButton();
     }
 
     public void stop() {
+        Log.d("stop");
         mWRSState = WRS_STATE.STOP;
-        mView.setBtnText("play");
+        mView.showPlayButton();
         textArrayCurrentPosition = 0;
     }
     public void pause() {
+        Log.d("pause");
         mWRSState = WRS_STATE.PAUSE;
         textArrayCurrentPosition --;
-        mView.setBtnText("play");
+        mView.showPlayButton();
     }
     private WRSPresenter.View mView;
     public void setView(WRSPresenter.View view) {
@@ -51,14 +55,18 @@ public class WRSScheduleManager {
         @Override
         public void handleMessage(Message msg) {
             //super.handleMessage(msg);
+            Log.d("msg.what="+msg.what);
             if(isLastPosition()){
                 stop();
-                mView.showText("종료?");
+                //mView.showText("종료?");
+                //mView.showToast("종료?");
+                Log.d("END");
                 return;
             }
 
             if(mWRSState == WRS_STATE.PLAY) {
                 String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
+                Log.d("textArrayCurrentPosition="+textArrayCurrentPosition);
                 mView.showText(textArray[textArrayCurrentPosition]);
                 mTextDisplayIntervalHandler.sendEmptyMessageDelayed(0, textDisplayTime);
                 textArrayCurrentPosition ++;
@@ -71,8 +79,11 @@ public class WRSScheduleManager {
             }
         }
     }
-    private enum WRS_STATE {PLAY, PAUSE, STOP};
-    private WRS_STATE mWRSState;
+    public enum WRS_STATE {PLAY, PAUSE, STOP};
+    private WRS_STATE mWRSState = WRS_STATE.STOP;
+    public WRS_STATE getWRSState() {
+        return mWRSState;
+    }
     private class TextDisplayIntervalHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {

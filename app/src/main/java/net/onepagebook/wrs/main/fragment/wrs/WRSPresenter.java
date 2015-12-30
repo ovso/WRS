@@ -14,7 +14,8 @@ public interface WRSPresenter {
         void play(String content);
         void showText(String text);
         void clearText();
-        void setBtnText(String text);
         void showToast(String msg);
+        void showPlayButton();
+        void showPauseButton();
     }
 }

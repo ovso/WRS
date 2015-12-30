@@ -23,16 +23,17 @@ public class Model {
     }
     public void doTextSplit(Context context) {
         String fullText = getWRSText(context);
-        int fullTextLength = fullText.length();
+        int fullTextLength = fullText.trim().length();
         Log.d("문장길이 = " + fullTextLength);
 
         int onceLength = 20;
+        Log.d("한번에 표시될 길이 = " + onceLength);
 
         Log.d("fullTextLength/onceLength = " + (fullTextLength/onceLength));
         Log.d("fullTextLength%onceLength = " + (fullTextLength%onceLength));
 
         int textArrayLength = fullTextLength%onceLength==0?(fullTextLength/onceLength):((fullTextLength/onceLength)+1);
-
+        Log.d("배열 갯수="+textArrayLength);
         String[] textArray = new String[textArrayLength];
         Log.d("textArray.length = " + textArray.length);
 

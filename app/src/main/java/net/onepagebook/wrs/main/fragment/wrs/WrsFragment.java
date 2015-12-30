@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,7 +73,7 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
             public void run() {
                 Message.obtain(handler, 0, content[i]).sendToTarget();
 
-                if(i == content.length -1) {
+                if (i == content.length - 1) {
 
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -127,32 +128,27 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
 
     @Override
     public void showText(final String text) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ((TextView) mContentView.findViewById(R.id.tv_show)).setText(text);
-            }
-        });
-
+        ((TextView) mContentView.findViewById(R.id.tv_show)).setText(text);
+        Log.d(text);
     }
 
     @Override
     public void clearText() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ((TextView) mContentView.findViewById(R.id.tv_show)).setText("");
-            }
-        });
-    }
-
-    @Override
-    public void setBtnText(String text) {
-        ((TextView)mContentView.findViewById(R.id.btn_play_pause)).setText(text);
+        ((TextView) mContentView.findViewById(R.id.tv_show)).setText("");
     }
 
     @Override
     public void showToast(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showPlayButton() {
+        ((ImageButton)mContentView.findViewById(R.id.btn_play_pause)).setImageResource(R.drawable.ic_av_play_arrow);
+    }
+
+    @Override
+    public void showPauseButton() {
+        ((ImageButton)mContentView.findViewById(R.id.btn_play_pause)).setImageResource(R.drawable.ic_av_pause);
     }
 }

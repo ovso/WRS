@@ -35,54 +35,49 @@
         android:layout_height="0dp"
         android:layout_weight="1.5"
         android:orientation="horizontal">
-        <Button
+        <ImageButton
             android:id="@+id/btn_play_pause"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="play"
-            android:tag="pause"/>
-        <Button
+            android:src="@drawable/ic_av_play_arrow"/>
+        <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="stop"
-            android:id="@+id/btn_stop" />
-        <Button
+            android:id="@+id/btn_stop"
+            android:src="@drawable/ic_av_stop"/>
+        <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="뒤로"/>
-        <Button
+            android:src="@drawable/ic_av_skip_previous"/>
+        <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="앞으로"/>
-        <Button
+            android:src="@drawable/ic_av_skip_next"/>
+        <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="원"/>
-        <Button
+            android:src="@drawable/ic_toggle_radio_button_off"/>
+        <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="원둘"/>
-        <Button
+            android:src="@drawable/ic_toggle_radio_button_on"/>
+
+        <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="반복"/>
-        <Button
+            android:src="@drawable/ic_av_repeat"/>
+        <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="새로고침"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="꺼내기"/>
+            android:src="@drawable/ic_av_replay" />
     </LinearLayout>
 
 </LinearLayout>
