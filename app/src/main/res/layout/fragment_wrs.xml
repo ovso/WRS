@@ -48,36 +48,42 @@
             android:id="@+id/btn_stop"
             android:src="@drawable/ic_av_stop"/>
         <ImageButton
+            android:id="@+id/btn_skip_previous"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:src="@drawable/ic_av_skip_previous"/>
         <ImageButton
+            android:id="@+id/btn_skip_next"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:src="@drawable/ic_av_skip_next"/>
         <ImageButton
+            android:id="@+id/btn_current_repeat"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:src="@drawable/ic_toggle_radio_button_off"/>
         <ImageButton
+            android:id="@+id/btn_current_hold"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:src="@drawable/ic_toggle_radio_button_on"/>
 
         <ImageButton
+            android:id="@+id/btn_loop"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:src="@drawable/ic_av_repeat"/>
         <ImageButton
+            android:id="@+id/btn_reset"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_av_replay" />
+            android:src="@drawable/ic_navigation_refresh" />
     </LinearLayout>
 
 </LinearLayout>

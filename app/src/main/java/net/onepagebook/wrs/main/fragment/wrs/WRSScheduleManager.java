@@ -44,6 +44,63 @@ public class WRSScheduleManager {
         textArrayCurrentPosition --;
         mView.showPlayButton();
     }
+    public void skipPrevious() {
+        if(mWRSState == WRS_STATE.PLAY) {
+            textArrayCurrentPosition --;
+        } else { // PAUSE, STOP, ..
+            textArrayCurrentPosition --;
+            String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
+            String text = textArray[textArrayCurrentPosition];
+            mView.showText(text);
+
+            mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
+        }
+    }
+    public void repeat() {
+        int nowPosition = textArrayCurrentPosition - 1;
+        String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
+        String text = textArray[nowPosition];
+        mView.showText(text);
+        mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
+    }
+    public void hold() {
+        int nowPosition = textArrayCurrentPosition - 1;
+        String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
+        String text = textArray[nowPosition];
+        mView.showText(text);
+        //mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
+    }
+    public void skipNext() {
+        if(mWRSState == WRS_STATE.PLAY) {
+            textArrayCurrentPosition ++;
+        } else { // PAUSE, STOP, ..
+            textArrayCurrentPosition ++;
+            String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
+            String text = textArray[textArrayCurrentPosition];
+            mView.showText(text);
+
+            mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
+        }
+    }
+    public boolean isLoop = false;
+    public void loop() {
+        isLoop =! isLoop;
+        if(isLoop) {
+            mView.showLoopOn();
+        } else {
+            mView.showLoopOff();
+        }
+    }
+    public void reset() {
+        Log.d("reset");
+    }
+    private Handler mSkipButtonHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            //super.handleMessage(msg);
+            mView.clearText();
+        }
+    };
     private WRSPresenter.View mView;
     public void setView(WRSPresenter.View view) {
         mView = view;
@@ -55,18 +112,21 @@ public class WRSScheduleManager {
         @Override
         public void handleMessage(Message msg) {
             //super.handleMessage(msg);
-            Log.d("msg.what="+msg.what);
+            //Log.d("msg.what="+msg.what);
             if(isLastPosition()){
-                stop();
-                //mView.showText("종료?");
-                //mView.showToast("종료?");
-                Log.d("END");
-                return;
+                if(isLoop) {
+                   textArrayCurrentPosition = 0;
+                } else {
+                    stop();
+                    Log.d("END");
+                    return;
+                }
+
             }
 
             if(mWRSState == WRS_STATE.PLAY) {
                 String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
-                Log.d("textArrayCurrentPosition="+textArrayCurrentPosition);
+                //Log.d("textArrayCurrentPosition="+textArrayCurrentPosition);
                 mView.showText(textArray[textArrayCurrentPosition]);
                 mTextDisplayIntervalHandler.sendEmptyMessageDelayed(0, textDisplayTime);
                 textArrayCurrentPosition ++;
@@ -79,7 +139,7 @@ public class WRSScheduleManager {
             }
         }
     }
-    public enum WRS_STATE {PLAY, PAUSE, STOP};
+    public enum WRS_STATE {PLAY, PAUSE, STOP, PREVIOUS};
     private WRS_STATE mWRSState = WRS_STATE.STOP;
     public WRS_STATE getWRSState() {
         return mWRSState;

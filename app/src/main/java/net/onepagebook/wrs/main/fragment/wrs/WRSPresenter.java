@@ -1,6 +1,7 @@
 package net.onepagebook.wrs.main.fragment.wrs;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 
 /**
@@ -17,5 +18,8 @@ public interface WRSPresenter {
         void showToast(String msg);
         void showPlayButton();
         void showPauseButton();
+        void showLoopOn();
+        void showLoopOff();
+        void showResetDialog(Handler handler);
     }
 }

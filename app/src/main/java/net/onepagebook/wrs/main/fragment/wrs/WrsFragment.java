@@ -1,5 +1,7 @@
 package net.onepagebook.wrs.main.fragment.wrs;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -94,6 +97,12 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
     public void onInit() {
         mContentView.findViewById(R.id.btn_play_pause).setOnClickListener(this);
         mContentView.findViewById(R.id.btn_stop).setOnClickListener(this);
+        mContentView.findViewById(R.id.btn_skip_previous).setOnClickListener(this);
+        mContentView.findViewById(R.id.btn_skip_next).setOnClickListener(this);
+        mContentView.findViewById(R.id.btn_current_repeat).setOnClickListener(this);
+        mContentView.findViewById(R.id.btn_current_hold).setOnClickListener(this);
+        mContentView.findViewById(R.id.btn_loop).setOnClickListener(this);
+        mContentView.findViewById(R.id.btn_reset).setOnClickListener(this);
     }
 
     @Override
@@ -129,7 +138,6 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
     @Override
     public void showText(final String text) {
         ((TextView) mContentView.findViewById(R.id.tv_show)).setText(text);
-        Log.d(text);
     }
 
     @Override
@@ -150,5 +158,30 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
     @Override
     public void showPauseButton() {
         ((ImageButton)mContentView.findViewById(R.id.btn_play_pause)).setImageResource(R.drawable.ic_av_pause);
+    }
+
+    @Override
+    public void showLoopOn() {
+        ((ImageButton)mContentView.findViewById(R.id.btn_loop)).setImageResource(R.drawable.ic_av_repeat_on);
+    }
+
+    @Override
+    public void showLoopOff() {
+        ((ImageButton)mContentView.findViewById(R.id.btn_loop)).setImageResource(R.drawable.ic_av_repeat);
+    }
+
+    @Override
+    public void showResetDialog(final Handler handler) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.dialog_loop_msg);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                Message.obtain(handler,0).sendToTarget();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.show();
     }
 }

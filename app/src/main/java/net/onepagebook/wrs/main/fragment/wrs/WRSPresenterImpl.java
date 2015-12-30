@@ -1,8 +1,11 @@
 package net.onepagebook.wrs.main.fragment.wrs;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 
 import net.onepagebook.wrs.app.MyApplication;
+import net.onepagebook.wrs.common.Log;
 import net.onpagebook.wrs.R;
 
 public class WRSPresenterImpl implements WRSPresenter {
@@ -21,6 +24,12 @@ public class WRSPresenterImpl implements WRSPresenter {
         mScheduleManager.setView(mView);
 
         mView.onInit();
+        Log.d("isLoop = " + mScheduleManager.isLoop);
+        if(mScheduleManager.isLoop) {
+            mView.showLoopOn();
+        } else {
+            mView.showLoopOff();
+        }
     }
 
     @Override
@@ -36,8 +45,24 @@ public class WRSPresenterImpl implements WRSPresenter {
             }
         } else if(id ==R.id.btn_stop) {
             mScheduleManager.stop();
-        } else {
-
+        } else if(id == R.id.btn_skip_previous) {
+            mScheduleManager.skipPrevious();
+        } else if(id == R.id.btn_skip_next) {
+            mScheduleManager.skipNext();
+        } else if(id == R.id.btn_current_repeat) {
+            mScheduleManager.repeat();
+        } else if(id == R.id.btn_current_hold) {
+            mScheduleManager.hold();
+        } else if(id == R.id.btn_loop) {
+            mScheduleManager.loop();
+        } else if(id == R.id.btn_reset) {
+            mView.showResetDialog(new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    //super.handleMessage(msg);
+                    mScheduleManager.reset();
+                }
+            });
         }
     }
 }
