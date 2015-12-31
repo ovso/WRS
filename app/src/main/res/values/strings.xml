@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="dialog_loop_msg">모든 설정을 초기화 합니다.</string>
-
+    <string name="wrs_describe">* 이 곳에 표시되는 문장을 읽으세요.</string>
     <string name="ok">확인</string>
     <string name="cancel">취소</string>
 </resources>

@@ -12,21 +12,33 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="*이 곳에 표시되는 문장을 읽으세요."
+            android:text="@string/wrs_describe"
             android:gravity="center"/>
-        <TextView
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="훈련시간....."
-            android:gravity="center"/>
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="훈련시간 : "
+                android:gravity="center_vertical|right"/>
+            <TextView
+                android:id="@+id/tv_traning_time"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="00:00:00 | 00:00:00"
+                android:gravity="center_vertical|left"/>
+        </LinearLayout>
     </LinearLayout>
     <TextView
         android:id="@+id/tv_show"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:text="box"
         android:background="@drawable/shape_rect_round"
         android:padding="10dp"
         android:layout_margin="5dp"/>

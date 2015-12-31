@@ -26,6 +26,10 @@ public class WRSScheduleManager {
     public void setTextArrayLastPosition(int textArrayLastPosition) {
         this.textArrayLastPosition = textArrayLastPosition;
     }
+    private int mTextArraySize = 0;
+    public void setTextArraySize(int size) {
+        mTextArraySize = size;
+    }
     public void play() {
         Log.d("play");
         mWRSState = WRS_STATE.PLAY;
@@ -38,6 +42,37 @@ public class WRSScheduleManager {
         mWRSState = WRS_STATE.STOP;
         mView.showPlayButton();
         textArrayCurrentPosition = 0;
+
+
+
+
+        int totalTime = ((textDisplayTime+textDisplayinterval)*mTextArraySize); // millis
+        Log.d("totalTime="+totalTime);
+        int seconds = totalTime/1000;
+        int minutes = seconds / 60;
+        int hour = minutes / 60;
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(replaceIntToString(hour));
+        builder.append(":");
+        builder.append(minutes);
+        builder.append(":");
+        builder.append(replaceIntToString((seconds>59)?(seconds%60):seconds));
+
+        Log.d(builder.toString());
+        //시
+        //분
+        //초
+
+
+
+    }
+    private String replaceIntToString(int num) {
+        if(num > 9) {
+            return String.valueOf(num);
+        } else {
+            return "0"+num;
+        }
     }
     public void pause() {
         Log.d("pause");
@@ -65,14 +100,16 @@ public class WRSScheduleManager {
         }
     }
     public void repeat() {
-        int nowPosition = textArrayCurrentPosition;
+        int nowPosition = textArrayCurrentPosition>textArrayLastPosition?textArrayLastPosition-1:textArrayLastPosition;
+
         String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
         String text = textArray[nowPosition];
         mView.showText(text);
         mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
     }
     public void hold() {
-        int nowPosition = textArrayCurrentPosition;
+        int nowPosition = textArrayCurrentPosition>textArrayLastPosition?textArrayLastPosition-1:textArrayCurrentPosition;
+
         String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
         String text = textArray[nowPosition];
         mView.showText(text);

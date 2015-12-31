@@ -25,6 +25,7 @@ public class MyApplication extends Application {
     public void setTextSplit(String[] texts) {
         mTexts = texts;
         mScheduleManager.setTextArrayLastPosition(texts.length - 1);
+        mScheduleManager.setTextArraySize(texts.length);
     }
     public String[] getTextSplit() {
         return mTexts;

@@ -184,4 +184,9 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
         builder.setNegativeButton(R.string.cancel, null);
         builder.show();
     }
+
+    @Override
+    public void showTraningTime(String time) {
+        ((TextView)mContentView.findViewById(R.id.tv_traning_time)).setText(time);
+    }
 }

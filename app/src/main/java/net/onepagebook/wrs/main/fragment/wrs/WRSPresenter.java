@@ -21,5 +21,6 @@ public interface WRSPresenter {
         void showLoopOn();
         void showLoopOff();
         void showResetDialog(Handler handler);
+        void showTraningTime(String time);
     }
 }
