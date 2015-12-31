@@ -21,6 +21,7 @@ public class WRSScheduleManager {
 
         mTextDisplayTimeHandler = new TextDisplayTimeHandler();
         mTextDisplayIntervalHandler = new TextDisplayIntervalHandler();
+        mSkipButtonHandler = new SkipButtonHandler();
     }
     public void setTextArrayLastPosition(int textArrayLastPosition) {
         this.textArrayLastPosition = textArrayLastPosition;
@@ -47,8 +48,15 @@ public class WRSScheduleManager {
     public void skipPrevious() {
         if(mWRSState == WRS_STATE.PLAY) {
             textArrayCurrentPosition --;
+
+            if(textArrayCurrentPosition < 0) {
+                textArrayCurrentPosition = textArrayLastPosition;
+            }
         } else { // PAUSE, STOP, ..
             textArrayCurrentPosition --;
+            if(textArrayCurrentPosition < 0) {
+                textArrayCurrentPosition = textArrayLastPosition;
+            }
             String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
             String text = textArray[textArrayCurrentPosition];
             mView.showText(text);
@@ -73,8 +81,16 @@ public class WRSScheduleManager {
     public void skipNext() {
         if(mWRSState == WRS_STATE.PLAY) {
             textArrayCurrentPosition ++;
+
+            if(textArrayCurrentPosition > textArrayLastPosition) {
+                textArrayCurrentPosition = 0;
+            }
         } else { // PAUSE, STOP, ..
             textArrayCurrentPosition ++;
+
+            if(textArrayCurrentPosition > textArrayLastPosition) {
+                textArrayCurrentPosition = 0;
+            }
             String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
             String text = textArray[textArrayCurrentPosition];
             mView.showText(text);
@@ -94,13 +110,15 @@ public class WRSScheduleManager {
     public void reset() {
         Log.d("reset");
     }
-    private Handler mSkipButtonHandler = new Handler() {
+    private Handler mSkipButtonHandler;
+
+    private class SkipButtonHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             //super.handleMessage(msg);
             mView.clearText();
         }
-    };
+    }
     private WRSPresenter.View mView;
     public void setView(WRSPresenter.View view) {
         mView = view;
