@@ -43,11 +43,8 @@ public class WRSScheduleManager {
         mView.showPlayButton();
         textArrayCurrentPosition = 0;
 
-
-
-
-        int totalTime = ((textDisplayTime+textDisplayinterval)*mTextArraySize); // millis
-        Log.d("totalTime="+totalTime);
+        int totalTime = ((textDisplayTime+textDisplayinterval)*mTextArraySize)*252*40; // millis
+        Log.d("totalTime="+((textDisplayTime+textDisplayinterval)*mTextArraySize));
         int seconds = totalTime/1000;
         int minutes = seconds / 60;
         int hour = minutes / 60;
@@ -55,7 +52,7 @@ public class WRSScheduleManager {
         StringBuilder builder = new StringBuilder();
         builder.append(replaceIntToString(hour));
         builder.append(":");
-        builder.append(minutes);
+        builder.append(replaceIntToString((minutes>59)?(minutes%60):minutes));
         builder.append(":");
         builder.append(replaceIntToString((seconds>59)?(seconds%60):seconds));
 
