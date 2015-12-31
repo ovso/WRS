@@ -65,14 +65,14 @@ public class WRSScheduleManager {
         }
     }
     public void repeat() {
-        int nowPosition = textArrayCurrentPosition - 1;
+        int nowPosition = textArrayCurrentPosition;
         String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
         String text = textArray[nowPosition];
         mView.showText(text);
         mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
     }
     public void hold() {
-        int nowPosition = textArrayCurrentPosition - 1;
+        int nowPosition = textArrayCurrentPosition;
         String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
         String text = textArray[nowPosition];
         mView.showText(text);
