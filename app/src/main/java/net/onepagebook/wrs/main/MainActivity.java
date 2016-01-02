@@ -15,7 +15,7 @@ import net.onpagebook.wrs.R;
 import net.onepagebook.wrs.main.fragment.setting.SetFragment;
 import net.onepagebook.wrs.main.fragment.wrs.WrsFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainPresenter.View, ViewPager.OnPageChangeListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -31,12 +31,20 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     public ViewPager mViewPager;
-
+    MainPresenter mPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
+        mPresenter = new MainPresenterImpl(this);
+        mPresenter.onCreate();
+
+    }
+
+    @Override
+    public void onInit() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setVisibility(View.GONE);
         setSupportActionBar(toolbar);
@@ -50,22 +58,23 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        mViewPager.addOnPageChangeListener(this);
 
-            }
+    }
 
-            @Override
-            public void onPageSelected(int position) {
-                Log.d(position+"");
-            }
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
+    }
 
-            }
-        });
+    @Override
+    public void onPageSelected(int position) {
+        mPresenter.onPageSelected(getApplicationContext(), position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
     /**

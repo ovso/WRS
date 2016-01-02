@@ -7,4 +7,12 @@
     <string name="ok">확인</string>
     <string name="cancel">취소</string>
     <string name="toast_empty_file">훈련을 위한 텍스트 파일을 열어주세요.</string>
+    <string name="text_show_time">문장표시시간</string>
+    <string name="text_show_interval">문장표시간격</string>
+    <string name="text_size">글자크기</string>
+    <string name="text_once_length">회당글자수</string>
+    <string name="text_set_time">0.1초</string>
+    <string name="text_set_size">15sp</string>
+    <string name="text_set_once_lehgth">5자</string>
+    <string name="btn_file">파일열기</string>
 </resources>

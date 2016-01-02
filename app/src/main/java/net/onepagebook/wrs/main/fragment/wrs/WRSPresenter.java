@@ -23,5 +23,6 @@ public interface WRSPresenter {
         void showTraningTimer(String time);
         void showTraningTimeFix(String time);
         void changePage(WRSScheduleManager.PAGE_STATE state);
+        void setTextSize(int size);
     }
 }

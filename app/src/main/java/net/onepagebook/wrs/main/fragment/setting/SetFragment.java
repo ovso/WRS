@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import net.onepagebook.wrs.common.Log;
 import net.onpagebook.wrs.R;
@@ -17,7 +18,7 @@ import net.onpagebook.wrs.R;
 /**
  * Created by jaeho_oh on 2015-12-21.
  */
-public class SetFragment extends Fragment implements SetPresenter.View, SeekBar.OnSeekBarChangeListener, View.OnClickListener {
+public class SetFragment extends Fragment implements SetPresenter.View, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     public final static SetFragment newInstance() {
         Log.d("");
@@ -35,14 +36,16 @@ public class SetFragment extends Fragment implements SetPresenter.View, SeekBar.
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mPresenter = new SetPresenterImpl(this);
-        mPresenter.onActivityCreate();
+        mPresenter.onActivityCreate(getActivity());
     }
 
     @Override
     public void onInit() {
-        SeekBar seekBar = (SeekBar) mContentView.findViewById(R.id.seekBar);
         mContentView.findViewById(R.id.button).setOnClickListener(this);
-        seekBar.setOnSeekBarChangeListener(this);
+        ((SeekBar)mContentView.findViewById(R.id.seek_text_show_time)).setOnSeekBarChangeListener(this);
+        ((SeekBar)mContentView.findViewById(R.id.seek_text_show_interval)).setOnSeekBarChangeListener(this);
+        ((SeekBar)mContentView.findViewById(R.id.seek_text_size)).setOnSeekBarChangeListener(this);
+        ((SeekBar)mContentView.findViewById(R.id.seek_text_once_length)).setOnSeekBarChangeListener(this);
     }
 
     @Override
@@ -50,25 +53,31 @@ public class SetFragment extends Fragment implements SetPresenter.View, SeekBar.
         startActivityForResult(intent, requestCode);
 
     }
+
+    @Override
+    public void setTextShowTime(String text) {
+        ((TextView)mContentView.findViewById(R.id.tv_text_show_time)).setText(text);
+    }
+
+    @Override
+    public void setTextShowInterval(String text) {
+        ((TextView)mContentView.findViewById(R.id.tv_text_show_interval)).setText(text);
+    }
+
+    @Override
+    public void setTextSize(String text) {
+        ((TextView)mContentView.findViewById(R.id.tv_text_size)).setText(text);
+    }
+
+    @Override
+    public void setTextOnceLength(String text) {
+        ((TextView)mContentView.findViewById(R.id.tv_text_once_length)).setText(text);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
         mPresenter.onActivityResult(getActivity(), requestCode, resultCode, data);
-
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        //Log.d("progress="+progress);
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
 
     }
 
@@ -85,5 +94,20 @@ public class SetFragment extends Fragment implements SetPresenter.View, SeekBar.
                 mPresenter.onClick(v);
             }
         }
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        mPresenter.onProgressChanged(seekBar, progress);
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        mPresenter.onStartTrackingTouch(seekBar);
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        mPresenter.onStopTrackingTouch(seekBar);
     }
 }

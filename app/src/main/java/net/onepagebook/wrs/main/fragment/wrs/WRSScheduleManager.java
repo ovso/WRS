@@ -33,10 +33,46 @@ public class WRSScheduleManager {
     public void setTextArraySize(int size) {
         mTextArraySize = size;
     }
+    private int mTextSize = 15;
+    public void setTextSize(int size) {
+        mTextSize = size;
+        mView.setTextSize(size);
+        //Log.d("size="+size);
+    }
+    public void setTextShowTime(int time) {
+        textDisplayTime = time;
+    }
+    public int getTextShowTime() {
+        return textDisplayTime;
+    }
+    public void setTextShowInterval(int millis) {
+        textDisplayinterval = millis;
+    }
+    public int getTextShowInterval() {
+        return textDisplayinterval;
+    }
+    private int mTextOnceLength = 5;
+    public void setTextOnceLength(int length) {
+        mTextOnceLength = length;
+    }
+    private String mWRSText;
+    public void setWRSText(String text) {
+        mWRSText = text;
+    }
+    public String getWRSText() {
+        return mWRSText;
+    }
+    private String[] mWRSTextSplit;
+    public void setWRSTextSplit(String[] texts){
+        mWRSTextSplit = texts;
+    }
+
+    public int getTextOnceLength() {
+        return mTextOnceLength;
+    }
     public void play() {
         Log.d("play");
-
-        String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
+        String[] textArray = mWRSTextSplit;
         if(textArray == null || textArray.length < 1) {
             mView.changePage(PAGE_STATE.SET);
             mView.showToast(mContext.getString(R.string.toast_empty_file));
@@ -46,7 +82,6 @@ public class WRSScheduleManager {
             mTraningTimerHandler.sendEmptyMessage(0);
             mView.showPauseButton();
         }
-
     }
 
     public void stop() {
@@ -126,7 +161,7 @@ public class WRSScheduleManager {
             if(textArrayCurrentPosition < 0) {
                 textArrayCurrentPosition = textArrayLastPosition;
             }
-            String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
+            String[] textArray = mWRSTextSplit;
             String text = textArray[textArrayCurrentPosition];
             mView.showText(text);
 
@@ -134,17 +169,19 @@ public class WRSScheduleManager {
         }
     }
     public void repeat() {
-        int nowPosition = textArrayCurrentPosition>textArrayLastPosition?textArrayLastPosition-1:textArrayLastPosition;
+        int nowPosition = textArrayCurrentPosition>textArrayLastPosition?textArrayLastPosition-1:textArrayCurrentPosition;
 
-        String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
+        String[] textArray = mWRSTextSplit;
         String text = textArray[nowPosition];
+        Log.d("nowPosition="+nowPosition);
+        Log.d("text = " + text);
         mView.showText(text);
         mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
     }
     public void hold() {
         int nowPosition = textArrayCurrentPosition>textArrayLastPosition?textArrayLastPosition-1:textArrayCurrentPosition;
 
-        String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
+        String[] textArray = mWRSTextSplit;
         String text = textArray[nowPosition];
         mView.showText(text);
         //mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
@@ -162,7 +199,7 @@ public class WRSScheduleManager {
             if(textArrayCurrentPosition > textArrayLastPosition) {
                 textArrayCurrentPosition = 0;
             }
-            String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
+            String[] textArray = mWRSTextSplit;
             String text = textArray[textArrayCurrentPosition];
             mView.showText(text);
 
@@ -224,7 +261,7 @@ public class WRSScheduleManager {
             }
 
             if(mWRSState == WRS_STATE.PLAY) {
-                String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
+                String[] textArray = mWRSTextSplit;
                 //Log.d("textArrayCurrentPosition="+textArrayCurrentPosition);
                 mView.showText(textArray[textArrayCurrentPosition]);
                 mTextDisplayIntervalHandler.sendEmptyMessageDelayed(0, textDisplayTime);

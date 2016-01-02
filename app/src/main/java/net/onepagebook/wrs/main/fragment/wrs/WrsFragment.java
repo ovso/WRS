@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,5 +122,10 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
         if(state == WRSScheduleManager.PAGE_STATE.SET) {
             ((MainActivity)getActivity()).mViewPager.setCurrentItem(1);
         }
+    }
+
+    @Override
+    public void setTextSize(int size) {
+        ((TextView)mContentView.findViewById(R.id.tv_show)).setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
     }
 }
