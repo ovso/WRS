@@ -12,7 +12,6 @@ public interface WRSPresenter {
     void onClick(android.view.View view);
     interface View{
         void onInit();
-        void play(String content);
         void showText(String text);
         void clearText();
         void showToast(String msg);
@@ -21,6 +20,8 @@ public interface WRSPresenter {
         void showLoopOn();
         void showLoopOff();
         void showResetDialog(Handler handler);
-        void showTraningTime(String time);
+        void showTraningTimer(String time);
+        void showTraningTimeFix(String time);
+        void changePage(WRSScheduleManager.PAGE_STATE state);
     }
 }

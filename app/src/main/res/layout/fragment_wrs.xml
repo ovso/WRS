@@ -14,25 +14,38 @@
             android:layout_weight="1"
             android:text="@string/wrs_describe"
             android:gravity="center"/>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-            <TextView
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="훈련시간 : "
-                android:gravity="center_vertical|right"/>
-            <TextView
-                android:id="@+id/tv_traning_time"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="00:00:00 | 00:00:00"
-                android:gravity="center_vertical|left"/>
-        </LinearLayout>
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="훈련시간 : "
+                    android:gravity="center_vertical|right"/>
+                <TextView
+                    android:id="@+id/tv_traning_timer"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="00:00:00"
+                    android:gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="/"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/tv_traning_time_fix"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="00:00:00"
+                    android:gravity="center"/>
+            </LinearLayout>
+
     </LinearLayout>
     <TextView
         android:id="@+id/tv_show"

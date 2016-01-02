@@ -6,4 +6,5 @@
     <string name="wrs_describe">* 이 곳에 표시되는 문장을 읽으세요.</string>
     <string name="ok">확인</string>
     <string name="cancel">취소</string>
+    <string name="toast_empty_file">훈련을 위한 텍스트 파일을 열어주세요.</string>
 </resources>

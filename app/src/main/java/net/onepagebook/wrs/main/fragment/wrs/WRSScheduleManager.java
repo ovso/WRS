@@ -6,6 +6,7 @@ import android.os.Message;
 
 import net.onepagebook.wrs.app.MyApplication;
 import net.onepagebook.wrs.common.Log;
+import net.onpagebook.wrs.R;
 
 public class WRSScheduleManager {
     private int textDisplayTime = 100;
@@ -16,12 +17,14 @@ public class WRSScheduleManager {
     private Context mContext;
     private TextDisplayTimeHandler mTextDisplayTimeHandler;
     private TextDisplayIntervalHandler mTextDisplayIntervalHandler;
+    private TraningTimerHandler mTraningTimerHandler;
     public WRSScheduleManager(Context context) {
         mContext = context;
 
         mTextDisplayTimeHandler = new TextDisplayTimeHandler();
         mTextDisplayIntervalHandler = new TextDisplayIntervalHandler();
         mSkipButtonHandler = new SkipButtonHandler();
+        mTraningTimerHandler = new TraningTimerHandler();
     }
     public void setTextArrayLastPosition(int textArrayLastPosition) {
         this.textArrayLastPosition = textArrayLastPosition;
@@ -32,9 +35,18 @@ public class WRSScheduleManager {
     }
     public void play() {
         Log.d("play");
-        mWRSState = WRS_STATE.PLAY;
-        mTextDisplayTimeHandler.sendEmptyMessage(0);
-        mView.showPauseButton();
+
+        String[] textArray = ((MyApplication) mContext.getApplicationContext()).getTextSplit();
+        if(textArray == null || textArray.length < 1) {
+            mView.changePage(PAGE_STATE.SET);
+            mView.showToast(mContext.getString(R.string.toast_empty_file));
+        } else {
+            mWRSState = WRS_STATE.PLAY;
+            mTextDisplayTimeHandler.sendEmptyMessage(0);
+            mTraningTimerHandler.sendEmptyMessage(0);
+            mView.showPauseButton();
+        }
+
     }
 
     public void stop() {
@@ -43,26 +55,49 @@ public class WRSScheduleManager {
         mView.showPlayButton();
         textArrayCurrentPosition = 0;
 
-        int totalTime = ((textDisplayTime+textDisplayinterval)*mTextArraySize)*252*40; // millis
+        mTraningTimerHandler.sendEmptyMessage(-1);
+    }
+    public void setTraningTime() {
+
+        int totalTime = ((textDisplayTime+textDisplayinterval)*mTextArraySize); // millis
         Log.d("totalTime="+((textDisplayTime+textDisplayinterval)*mTextArraySize));
         int seconds = totalTime/1000;
-        int minutes = seconds / 60;
+        int realSeconds = (seconds>59)?(seconds%60):seconds;
+        int minutes = (seconds / 60);
+        int realMinutes = (minutes>59)?(minutes%60):minutes;
         int hour = minutes / 60;
 
         StringBuilder builder = new StringBuilder();
         builder.append(replaceIntToString(hour));
         builder.append(":");
-        builder.append(replaceIntToString((minutes>59)?(minutes%60):minutes));
+        builder.append(replaceIntToString(realMinutes));
         builder.append(":");
-        builder.append(replaceIntToString((seconds>59)?(seconds%60):seconds));
+        builder.append(replaceIntToString(realSeconds));
 
         Log.d(builder.toString());
-        //시
-        //분
-        //초
+        mView.showTraningTimeFix(builder.toString());
+        mView.showTraningTimer(builder.toString());
 
+    }
+    public void setTraningTimer() {
+        int totalTime = ((textDisplayTime+textDisplayinterval)*(mTextArraySize))-((textDisplayTime+textDisplayinterval)*(mTextArraySize-textArrayCurrentPosition)); // millis
+        //int totalTime = (textDisplayTime+textDisplayinterval)*(mTextArraySize-textArrayCurrentPosition);
+        //Log.d("totalTime="+((textDisplayTime+textDisplayinterval)*mTextArraySize));
+        int seconds = totalTime/1000;
+        int realSeconds = (seconds>59)?(seconds%60):seconds;
+        int minutes = (seconds / 60);
+        int realMinutes = (minutes>59)?(minutes%60):minutes;
+        int hour = minutes / 60;
 
+        StringBuilder builder = new StringBuilder();
+        builder.append(replaceIntToString(hour));
+        builder.append(":");
+        builder.append(replaceIntToString(realMinutes));
+        builder.append(":");
+        builder.append(replaceIntToString(realSeconds));
 
+        //Log.d(builder.toString());
+        mView.showTraningTimer(builder.toString());
     }
     private String replaceIntToString(int num) {
         if(num > 9) {
@@ -76,6 +111,8 @@ public class WRSScheduleManager {
         mWRSState = WRS_STATE.PAUSE;
         textArrayCurrentPosition --;
         mView.showPlayButton();
+
+        mTraningTimerHandler.sendEmptyMessage(-1);
     }
     public void skipPrevious() {
         if(mWRSState == WRS_STATE.PLAY) {
@@ -153,6 +190,17 @@ public class WRSScheduleManager {
             mView.clearText();
         }
     }
+    private class TraningTimerHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            //super.handleMessage(msg);
+            setTraningTimer();
+            if(msg.what != -1) {
+                this.sendEmptyMessageDelayed(0, 500);
+            }
+        }
+    }
+
     private WRSPresenter.View mView;
     public void setView(WRSPresenter.View view) {
         mView = view;
@@ -173,7 +221,6 @@ public class WRSScheduleManager {
                     Log.d("END");
                     return;
                 }
-
             }
 
             if(mWRSState == WRS_STATE.PLAY) {
@@ -191,6 +238,7 @@ public class WRSScheduleManager {
             }
         }
     }
+    public enum PAGE_STATE {WRS, SET};
     public enum WRS_STATE {PLAY, PAUSE, STOP, PREVIOUS};
     private WRS_STATE mWRSState = WRS_STATE.STOP;
     public WRS_STATE getWRSState() {
