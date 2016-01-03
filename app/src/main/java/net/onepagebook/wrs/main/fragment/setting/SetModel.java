@@ -131,10 +131,6 @@ public class SetModel extends Model {
         view.setTextOnceLength(onceLength[index] + "자");
     }
 
-    public int getTextOnceLength(Context context) {
-        return ((MyApplication)context.getApplicationContext()).getScheduleManager().getTextOnceLength();
-    }
-
     public void setWRSText(Context context, String text) {
         ((MyApplication)context.getApplicationContext()).getScheduleManager().setWRSText(text);
     }
@@ -146,6 +142,12 @@ public class SetModel extends Model {
         ((MyApplication)context.getApplicationContext()).getScheduleManager().setTextArrayLastPosition(texts.length - 1);
         ((MyApplication)context.getApplicationContext()).getScheduleManager().setTextArraySize(texts.length);
         ((MyApplication)context.getApplicationContext()).getScheduleManager().setTraningTime();
+    }
+    public void setFileName(Context context, String name) {
+        ((MyApplication)context.getApplicationContext()).getScheduleManager().setFileName(name);
+    }
+    public String getFileName(Context context) {
+        return ((MyApplication)context.getApplicationContext()).getScheduleManager().getFileName();
     }
     public void doTextSplit(Context context) {
         String fullText = getWRSText(context);
@@ -174,7 +176,22 @@ public class SetModel extends Model {
 
         setTextSplit(context, textArray);
     }
-    public void onStopTrackingTouchOnceLength(Context context) {
-        doTextSplit(context);
+    public void onStopTrackingTouchOnceLength(SeekBar seekBar) {
+
+        if(((MyApplication)seekBar.getContext().getApplicationContext()).getScheduleManager().getWRSText() != null &&
+                !((MyApplication)seekBar.getContext().getApplicationContext()).getScheduleManager().getWRSText().equals("")) {
+            doTextSplit(seekBar.getContext());
+        }
+        ((MyApplication)seekBar.getContext().getApplicationContext()).getScheduleManager().setProgressTextOnceLength(seekBar.getProgress());
+    }
+    public void onStopTrackingTouchTextSize(SeekBar seekBar) {
+        Log.d("progress = " + seekBar.getProgress());
+        ((MyApplication)seekBar.getContext().getApplicationContext()).getScheduleManager().setProgressTextSize(seekBar.getProgress());
+    }
+    public void onStopTrackingTouchTextTime(SeekBar seekBar) {
+        ((MyApplication)seekBar.getContext().getApplicationContext()).getScheduleManager().setProgressShowTime(seekBar.getProgress());
+    }
+    public void onStopTrackingTouchTextInterval(SeekBar seekBar) {
+        ((MyApplication)seekBar.getContext().getApplicationContext()).getScheduleManager().setProgressShowInterval(seekBar.getProgress());
     }
 }

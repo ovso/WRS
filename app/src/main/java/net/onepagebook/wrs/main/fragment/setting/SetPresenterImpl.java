@@ -23,7 +23,14 @@ public class SetPresenterImpl implements SetPresenter {
     @Override
     public void onActivityCreate(Context context) {
         mScheduleManager = ((MyApplication)context.getApplicationContext()).getScheduleManager();
+        mScheduleManager.setSetView(mView);
         mView.onInit();
+
+        mView.setSeekBarTextSize(mScheduleManager.getProgressTextSize());
+        mView.setSeekBarShowInterval(mScheduleManager.getProgressShowInterval());
+        mView.setSeekBarShowTime(mScheduleManager.getProgressShowTime());
+        mView.setSeekBarTextOnceLength(mScheduleManager.getProgressTextOnceLength());
+        mView.showFileName(mScheduleManager.getFileName());
     }
     @Override
     public void onActivityResult(Context context, int requestCode, int resultCode, Intent data) {
@@ -35,15 +42,18 @@ public class SetPresenterImpl implements SetPresenter {
                         String path = data.getData().getPath();
                         String fullFilePath;
                         Log.d("path=" + path);
+
                         if(path.contains(":")) { // == if(Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH)
                             String fileName = path.split(":")[1];
                             fullFilePath = environmentDirectory + "/" + fileName;
                         } else {
+
                             fullFilePath = path;
                         }
 
                         mModel.setWRSText(context, mModel.readTextFile(fullFilePath));
                         mModel.doTextSplit(context);
+                        mModel.setFileName(context,path.split("/")[path.split("/").length-1]);
                     }
                 }
             }
@@ -73,13 +83,16 @@ public class SetPresenterImpl implements SetPresenter {
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-    }
-
-    @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        if(seekBar.getId() == R.id.seek_text_once_length) {
-            mModel.onStopTrackingTouchOnceLength(seekBar.getContext());
+        int id = seekBar.getId();
+        if(id == R.id.seek_text_once_length) {
+            mModel.onStopTrackingTouchOnceLength(seekBar);
+        } else if(id == R.id.seek_text_size) {
+            mModel.onStopTrackingTouchTextSize(seekBar);
+        } else if(id == R.id.seek_text_show_time) {
+            mModel.onStopTrackingTouchTextTime(seekBar);
+        } else if(id == R.id.seek_text_show_interval) {
+            mModel.onStopTrackingTouchTextInterval(seekBar);
         }
     }
 }

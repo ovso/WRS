@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
-import net.onepagebook.wrs.app.MyApplication;
 import net.onepagebook.wrs.common.Log;
+import net.onepagebook.wrs.main.fragment.setting.SetPresenter;
 import net.onpagebook.wrs.R;
 
 public class WRSScheduleManager {
@@ -36,8 +36,11 @@ public class WRSScheduleManager {
     private int mTextSize = 15;
     public void setTextSize(int size) {
         mTextSize = size;
-        mView.setTextSize(size);
+        mWRSView.setTextSize(size);
         //Log.d("size="+size);
+    }
+    public int getTextSize() {
+        return mTextSize;
     }
     public void setTextShowTime(int time) {
         textDisplayTime = time;
@@ -72,22 +75,22 @@ public class WRSScheduleManager {
     }
     public void play() {
         Log.d("play");
-        String[] textArray = mWRSTextSplit;
-        if(textArray == null || textArray.length < 1) {
-            mView.changePage(PAGE_STATE.SET);
-            mView.showToast(mContext.getString(R.string.toast_empty_file));
+        //String[] textArray = mWRSTextSplit;
+        if(mWRSText == null || mWRSText.length() < 1) {
+            mWRSView.changePage(PAGE_STATE.SET);
+            mWRSView.showToast(mContext.getString(R.string.toast_empty_file));
         } else {
             mWRSState = WRS_STATE.PLAY;
             mTextDisplayTimeHandler.sendEmptyMessage(0);
             mTraningTimerHandler.sendEmptyMessage(0);
-            mView.showPauseButton();
+            mWRSView.showPauseButton();
         }
     }
 
     public void stop() {
         Log.d("stop");
         mWRSState = WRS_STATE.STOP;
-        mView.showPlayButton();
+        mWRSView.showPlayButton();
         textArrayCurrentPosition = 0;
 
         mTraningTimerHandler.sendEmptyMessage(-1);
@@ -102,17 +105,24 @@ public class WRSScheduleManager {
         int realMinutes = (minutes>59)?(minutes%60):minutes;
         int hour = minutes / 60;
 
-        StringBuilder builder = new StringBuilder();
-        builder.append(replaceIntToString(hour));
-        builder.append(":");
-        builder.append(replaceIntToString(realMinutes));
-        builder.append(":");
-        builder.append(replaceIntToString(realSeconds));
+        mFixTimeStringBuilder = new StringBuilder();
+        mFixTimeStringBuilder.append(replaceIntToString(hour));
+        mFixTimeStringBuilder.append(":");
+        mFixTimeStringBuilder.append(replaceIntToString(realMinutes));
+        mFixTimeStringBuilder.append(":");
+        mFixTimeStringBuilder.append(replaceIntToString(realSeconds));
 
-        Log.d(builder.toString());
-        mView.showTraningTimeFix(builder.toString());
-        mView.showTraningTimer(builder.toString());
+        Log.d(mFixTimeStringBuilder.toString());
+        mWRSView.showTraningTimeFix(mFixTimeStringBuilder.toString());
+        //mWRSView.showTraningTimer(mFixTimeStringBuilder.toString());
 
+    }
+    private StringBuilder mFixTimeStringBuilder=null;
+    public StringBuilder getFixTimerStringBuilder() {
+        return mFixTimeStringBuilder;
+    }
+    public StringBuilder getTimerStringBuilder() {
+        return mTimerStringBuilder;
     }
     public void setTraningTimer() {
         int totalTime = ((textDisplayTime+textDisplayinterval)*(mTextArraySize))-((textDisplayTime+textDisplayinterval)*(mTextArraySize-textArrayCurrentPosition)); // millis
@@ -124,16 +134,17 @@ public class WRSScheduleManager {
         int realMinutes = (minutes>59)?(minutes%60):minutes;
         int hour = minutes / 60;
 
-        StringBuilder builder = new StringBuilder();
-        builder.append(replaceIntToString(hour));
-        builder.append(":");
-        builder.append(replaceIntToString(realMinutes));
-        builder.append(":");
-        builder.append(replaceIntToString(realSeconds));
+        mTimerStringBuilder = new StringBuilder();
+        mTimerStringBuilder.append(replaceIntToString(hour));
+        mTimerStringBuilder.append(":");
+        mTimerStringBuilder.append(replaceIntToString(realMinutes));
+        mTimerStringBuilder.append(":");
+        mTimerStringBuilder.append(replaceIntToString(realSeconds));
 
         //Log.d(builder.toString());
-        mView.showTraningTimer(builder.toString());
+        mWRSView.showTraningTimer(mTimerStringBuilder.toString());
     }
+    private StringBuilder mTimerStringBuilder=null;
     private String replaceIntToString(int num) {
         if(num > 9) {
             return String.valueOf(num);
@@ -141,11 +152,22 @@ public class WRSScheduleManager {
             return "0"+num;
         }
     }
+    private String mFileName;
+    public void setFileName(String name) {
+        mFileName = name;
+        mSetView.showFileName(name);
+    }
+    public String getFileName() {
+        return mFileName;
+    }
     public void pause() {
         Log.d("pause");
         mWRSState = WRS_STATE.PAUSE;
         textArrayCurrentPosition --;
-        mView.showPlayButton();
+        if(textArrayCurrentPosition < 0) {
+            textArrayCurrentPosition = 0;
+        }
+        mWRSView.showPlayButton();
 
         mTraningTimerHandler.sendEmptyMessage(-1);
     }
@@ -162,29 +184,44 @@ public class WRSScheduleManager {
                 textArrayCurrentPosition = textArrayLastPosition;
             }
             String[] textArray = mWRSTextSplit;
-            String text = textArray[textArrayCurrentPosition];
-            mView.showText(text);
+            if(mWRSText != null) {
+                String text = textArray[textArrayCurrentPosition];
+                mWRSView.showText(text);
 
-            mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
+                mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
+            } else {
+                mWRSView.changePage(PAGE_STATE.SET);
+                mWRSView.showToast(mContext.getString(R.string.toast_empty_file));
+            }
         }
     }
     public void repeat() {
         int nowPosition = textArrayCurrentPosition>textArrayLastPosition?textArrayLastPosition-1:textArrayCurrentPosition;
 
         String[] textArray = mWRSTextSplit;
-        String text = textArray[nowPosition];
-        Log.d("nowPosition="+nowPosition);
-        Log.d("text = " + text);
-        mView.showText(text);
-        mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
+        if(mWRSText != null) {
+            String text = textArray[nowPosition];
+            Log.d("nowPosition="+nowPosition);
+            Log.d("text = " + text);
+            mWRSView.showText(text);
+            mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
+        } else {
+            mWRSView.showToast(mContext.getString(R.string.toast_empty_file));
+            mWRSView.changePage(PAGE_STATE.SET);
+        }
     }
     public void hold() {
         int nowPosition = textArrayCurrentPosition>textArrayLastPosition?textArrayLastPosition-1:textArrayCurrentPosition;
 
         String[] textArray = mWRSTextSplit;
-        String text = textArray[nowPosition];
-        mView.showText(text);
-        //mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
+        if(mWRSText != null) {
+            String text = textArray[nowPosition];
+            mWRSView.showText(text);
+            //mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
+        } else {
+            mWRSView.showToast(mContext.getString(R.string.toast_empty_file));
+            mWRSView.changePage(PAGE_STATE.SET);
+        }
     }
     public void skipNext() {
         if(mWRSState == WRS_STATE.PLAY) {
@@ -200,31 +237,99 @@ public class WRSScheduleManager {
                 textArrayCurrentPosition = 0;
             }
             String[] textArray = mWRSTextSplit;
-            String text = textArray[textArrayCurrentPosition];
-            mView.showText(text);
+            if(mWRSText != null) {
+                String text = textArray[textArrayCurrentPosition];
+                mWRSView.showText(text);
 
-            mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
+                mSkipButtonHandler.sendEmptyMessageDelayed(0, textDisplayTime);
+            } else {
+                mWRSView.showToast(mContext.getString(R.string.toast_empty_file));
+                mWRSView.changePage(PAGE_STATE.SET);
+            }
         }
     }
     public boolean isLoop = false;
     public void loop() {
         isLoop =! isLoop;
         if(isLoop) {
-            mView.showLoopOn();
+            mWRSView.showLoopOn();
         } else {
-            mView.showLoopOff();
+            mWRSView.showLoopOff();
         }
     }
     public void reset() {
         Log.d("reset");
+/*
+        textDisplayTime = 100;
+        textDisplayinterval = 0;
+        mTextSize = 15;
+        mTextOnceLength = 5;
+        .setTextSize(5);
+*/
+//        progressTextOnceLength = 0;
+//        progressShowInterval = 0;
+//        progressShowTime = 0;
+//        progressTextSize = 0;
+        stop();
+        setProgressShowInterval(0);
+        setProgressShowTime(0);
+        setProgressTextSize(0);
+        setProgressTextOnceLength(0);
+
+        mWRSText = null;
+        mFileName = null;
+        mSetView.showFileName(mFileName);
+
+        mFixTimeStringBuilder = null;
+        mTimerStringBuilder = null;
+        mWRSView.showTraningTimer("00:00:00");
+        mWRSView.showTraningTimeFix("00:00:00");
+
+        mWRSView.changePage(PAGE_STATE.SET);
     }
     private Handler mSkipButtonHandler;
+
+    public int getProgressShowTime() {
+        return progressShowTime;
+    }
+
+    public void setProgressShowTime(int progressShowTime) {
+        this.progressShowTime = progressShowTime;
+        mSetView.setSeekBarShowTime(progressShowTime);
+    }
+
+    public int getProgressShowInterval() {
+        return progressShowInterval;
+    }
+
+    public void setProgressShowInterval(int progressShowInterval) {
+        this.progressShowInterval = progressShowInterval;
+        mSetView.setSeekBarShowInterval(progressShowInterval);
+    }
+
+    public int getProgressTextSize() {
+        return progressTextSize;
+    }
+
+    public void setProgressTextSize(int progressTextSize) {
+        this.progressTextSize = progressTextSize;
+        mSetView.setSeekBarTextSize(progressTextSize);
+    }
+
+    public int getProgressTextOnceLength() {
+        return progressTextOnceLength;
+    }
+
+    public void setProgressTextOnceLength(int progressTextOnceLength) {
+        this.progressTextOnceLength = progressTextOnceLength;
+        mSetView.setSeekBarTextOnceLength(progressTextOnceLength);
+    }
 
     private class SkipButtonHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             //super.handleMessage(msg);
-            mView.clearText();
+            mWRSView.clearText();
         }
     }
     private class TraningTimerHandler extends Handler {
@@ -238,9 +343,13 @@ public class WRSScheduleManager {
         }
     }
 
-    private WRSPresenter.View mView;
-    public void setView(WRSPresenter.View view) {
-        mView = view;
+    private WRSPresenter.View mWRSView;
+    public void setWRSView(WRSPresenter.View view) {
+        mWRSView = view;
+    }
+    private SetPresenter.View mSetView;
+    public void setSetView(SetPresenter.View view) {
+        mSetView = view;
     }
     private boolean isLastPosition() {
         return textArrayCurrentPosition > textArrayLastPosition;
@@ -263,7 +372,7 @@ public class WRSScheduleManager {
             if(mWRSState == WRS_STATE.PLAY) {
                 String[] textArray = mWRSTextSplit;
                 //Log.d("textArrayCurrentPosition="+textArrayCurrentPosition);
-                mView.showText(textArray[textArrayCurrentPosition]);
+                mWRSView.showText(textArray[textArrayCurrentPosition]);
                 mTextDisplayIntervalHandler.sendEmptyMessageDelayed(0, textDisplayTime);
                 textArrayCurrentPosition ++;
             }else if(mWRSState == WRS_STATE.PAUSE) {
@@ -295,7 +404,12 @@ public class WRSScheduleManager {
             } else {
 
             }
-            mView.clearText();
+            mWRSView.clearText();
         }
     }
+
+    private int progressShowTime = 0;
+    private int progressShowInterval = 0;
+    private int progressTextSize = 0;
+    private int progressTextOnceLength = 0;
 }

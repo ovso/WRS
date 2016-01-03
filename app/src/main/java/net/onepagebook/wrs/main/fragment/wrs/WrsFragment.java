@@ -38,7 +38,6 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
 
         mPresenter = new WRSPresenterImpl(this);
         mPresenter.onActivityCreate(getActivity());
-
     }
 
     @Override
@@ -100,7 +99,8 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                Message.obtain(handler,0).sendToTarget();
+                //Message.obtain(handler,0).sendToTarget();
+                Message.obtain(handler,0,getActivity()).sendToTarget();
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
@@ -119,8 +119,9 @@ public class WrsFragment extends Fragment implements WRSPresenter.View, View.OnC
 
     @Override
     public void changePage(WRSScheduleManager.PAGE_STATE state) {
+        Log.d("");
         if(state == WRSScheduleManager.PAGE_STATE.SET) {
-            ((MainActivity)getActivity()).mViewPager.setCurrentItem(1);
+            ((MainActivity)getActivity()).getViewPager().setCurrentItem(1);
         }
     }
 

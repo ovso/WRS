@@ -21,7 +21,7 @@ public class WRSPresenterImpl implements WRSPresenter {
     @Override
     public void onActivityCreate(Context context) {
         mScheduleManager = ((MyApplication)context.getApplicationContext()).getScheduleManager();
-        mScheduleManager.setView(mView);
+        mScheduleManager.setWRSView(mView);
 
         mView.onInit();
         Log.d("isLoop = " + mScheduleManager.isLoop);
@@ -30,6 +30,8 @@ public class WRSPresenterImpl implements WRSPresenter {
         } else {
             mView.showLoopOff();
         }
+        mView.showTraningTimeFix(mScheduleManager.getFixTimerStringBuilder()==null?"00:00:00":mScheduleManager.getFixTimerStringBuilder().toString());
+        mView.showTraningTimer(mScheduleManager.getTimerStringBuilder()==null?"00:00:00":mScheduleManager.getTimerStringBuilder().toString());
     }
 
     @Override
@@ -56,13 +58,15 @@ public class WRSPresenterImpl implements WRSPresenter {
         } else if(id == R.id.btn_loop) {
             mScheduleManager.loop();
         } else if(id == R.id.btn_reset) {
-            mView.showResetDialog(new Handler() {
-                @Override
-                public void handleMessage(Message msg) {
-                    //super.handleMessage(msg);
-                    mScheduleManager.reset();
-                }
-            });
+            mView.showResetDialog(new DialogInterfaceHandler());
+            mScheduleManager.pause();
+        }
+    }
+    private class DialogInterfaceHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            //super.handleMessage(msg);
+            mScheduleManager.reset();
         }
     }
 }

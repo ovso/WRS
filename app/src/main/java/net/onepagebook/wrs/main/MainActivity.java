@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    public ViewPager mViewPager;
+    private ViewPager mViewPager;
     MainPresenter mPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +55,17 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
 
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         mViewPager.addOnPageChangeListener(this);
 
     }
-
+    public ViewPager getViewPager() {
+        return mViewPager;
+    }
+    public void notifyDataSetChanged() {
+        mSectionsPagerAdapter.notifyDataSetChanged();
+    }
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 

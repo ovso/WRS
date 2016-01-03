@@ -15,9 +15,6 @@ import android.widget.TextView;
 import net.onepagebook.wrs.common.Log;
 import net.onpagebook.wrs.R;
 
-/**
- * Created by jaeho_oh on 2015-12-21.
- */
 public class SetFragment extends Fragment implements SetPresenter.View, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     public final static SetFragment newInstance() {
@@ -51,7 +48,6 @@ public class SetFragment extends Fragment implements SetPresenter.View, View.OnC
     @Override
     public void navigateToActivity(Intent intent, int requestCode) {
         startActivityForResult(intent, requestCode);
-
     }
 
     @Override
@@ -75,10 +71,34 @@ public class SetFragment extends Fragment implements SetPresenter.View, View.OnC
     }
 
     @Override
+    public void setSeekBarShowTime(int progress) {
+        ((SeekBar)mContentView.findViewById(R.id.seek_text_show_time)).setProgress(progress);
+    }
+
+    @Override
+    public void setSeekBarShowInterval(int progress) {
+        ((SeekBar)mContentView.findViewById(R.id.seek_text_show_interval)).setProgress(progress);
+    }
+
+    @Override
+    public void setSeekBarTextSize(int progress) {
+        ((SeekBar)mContentView.findViewById(R.id.seek_text_size)).setProgress(progress);
+    }
+
+    @Override
+    public void setSeekBarTextOnceLength(int progress) {
+        ((SeekBar)mContentView.findViewById(R.id.seek_text_once_length)).setProgress(progress);
+    }
+
+    @Override
+    public void showFileName(String name) {
+        ((TextView)mContentView.findViewById(R.id.tv_file)).setText(name);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
         mPresenter.onActivityResult(getActivity(), requestCode, resultCode, data);
-
     }
 
     @Override
@@ -103,11 +123,11 @@ public class SetFragment extends Fragment implements SetPresenter.View, View.OnC
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        mPresenter.onStartTrackingTouch(seekBar);
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         mPresenter.onStopTrackingTouch(seekBar);
+        Log.d("");
     }
 }
